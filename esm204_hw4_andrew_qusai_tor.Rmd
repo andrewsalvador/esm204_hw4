@@ -1,0 +1,213 @@
+---
+title: "ESM 204 HW4"
+author: "Andrew Salvador, Qusai, Tor Fibiger"
+date: "5/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Attach necessary packages
+```{r}
+library(janitor)
+library(tidyverse)
+library(broom)
+```
+
+Build the functions, set variables t & T, everything else is given
+temp = temperature at year t
+K_t = fraction of economic activity retained at year t, if temperature is T(t)
+C_t = economic activity ("consumption") at time t
+U_c = society's utility from consumption
+discount rate r = delta + ng
+```{r}
+t = 200
+T = 0
+B = 0.055
+g = 0.01
+n = 0.5
+delta = 0.005
+r = delta + n*g
+
+#FUNCTION 1 (temperature at year 't', temperature 'T' at year 100)
+temp = function(t,T)
+{
+  out = min(t*T/100, T)
+  return(out)
+}
+
+temp(t,T)
+
+temp <- temp(t,T)
+
+#FUNCTION 2 (fraction of economic activity)
+K_t = function(temp,B)
+{
+  out = exp(-B*temp^2)
+  return(out)
+}
+
+K_t(temp, B)
+
+K_t <- K_t(temp, B)
+
+#FUNCTION 3 (economic activity "consumption", grows at rate g, reduced by K)
+C_t = function(K_t, g, t)
+{
+  out = K_t*exp(g*t)
+  return(out)
+}
+
+C_t(K_t, g, t)
+
+C_t <- C_t(K_t, g, t)
+
+#FUNCTION 4 (society's utility from consumption)
+U_c = function(C_t, n)
+{
+  out = ((C_t)^(1-n)/(1-n))
+  return(out)
+}
+
+U_c(C_t, n)
+
+U_c <- U_c(C_t, n)
+```
+
+----------------------------------------------------------------------------------------
+
+QUESTION 1: PLOTS
+(a) Plot temperature over time for no climate change (T = 0), modest climate change (T = 2), and with extreme climate change (T = 8).
+
+
+(b) Plot consumption over time for no climate change, modest climate change, and extreme climate change.
+
+Generate data 3 tables of data (no, modest, extreme climate change) that show consumption change over time (year 0-100)
+```{r}
+# Trying to make a data table to make data to use for ggplot...its not working. 
+# Was trying to copy what Sam did in his hw 3 key
+
+year <- seq(0, 100, by = 1)
+consumption <- K_t(temp, year)
+utility <- U_c(year, n)
+
+results <- data.frame(year, consumption, utility)
+```
+
+
+(c) Plot undiscoutned utility over time for no climate change, modest climate change, and extreme climate change.
+
+----------------------------------------------------------------------------------------
+
+QUESTION 2: ANALYSIS
+
+(a) Suppose T = 4.4. What is the present value (i.e. discounted) utility over the next 200 years with climate change? What is the present value utility without climate change? What is the percentage loss in present value utility from climate change?
+
+I think I interpreted the question wrong so the calculations may be wrong...to get the present value utility *over* the next 200 years I think we have to sum the utility each year from 0 to 199 to get the total utility...I just compared the utilities in the year 200, not the sum of the utilities over those years...
+
+*With* climate change: 
+T = 4.4
+t = 200
+r = 0.01 = 1%
+Utility at year 200 = 3.35062595479517
+Vknot = Vt/((1+r)^t)
+
+Vknot = 3.35062595479517/(1.01^200)
+Vknot = 3.35062595479517/7.316018
+Vknot = 0.4579849
+Present value utility with climate change = *0.4579849*
+
+*Without* climate change: 
+T = 0
+t = 200
+r = 0.01 = 1%
+Utility at year 200 = 5.4365636591809
+Vkot = Vt/((1+r)^t)
+
+Vknot = 5.4365636591809/(1.01^200)
+Vknot = 5.4365636591809/7.316018
+Vknot = 0.7431042
+Present value utility without climate change = *0.7431042*
+
+Percentage loss from climate change: 
+0.7431042 - 0.4579849 = 0.2851193
+0.2851193/0.7431042 = 0.3836868 = 38.37% loss
+*L = 38.37%*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(b) 
+Now, show how sensitive your calculation of L is to the following parameters: T, g, n, and B. To do so, calculate the % change in L that arises from a 10% increase in each of these parameters.
+
+*Sensitivity to T*
+*With* climate change: 10% increase of 4.4, new T = 4.84
+Utility at year 200 = 3.02680370698996
+
+Vknot = 3.02680370698996/(1.01^200)
+Vknot = 0.4137228
+Present value utility with climate change = *0.4137228*
+
+*Without* climate change: T remains 0 (10% increase of 0 is 0)
+Present value utility without climate change = *0.7431042*
+
+New percentage loss from climate change:
+0.7431042 - 0.4137228 = 0.3293814
+0.3293814/0.7431042 = 0.4432506 = 44.33%
+*L = 44.33%*
+
+*So a 10% increase in T results in a 5.96% increase in L* (or maybe 15%? confused here since L is already in percent...does going from 38.37% to 44.33% mean a 5.96% increase or would it be 15.53%?)
+
+
+*Sensitivity to g*
+*With* climate change: new g = 0.11
+Utility in year 200 = 3.70301436258908
+Present value utility = 3.70301436258908/(1.01^200)
+Present value utility = *0.5061516*
+
+*Without* climate change: new g = 0.11 
+Utility in year 200 = 6.00833204789287
+Present value utility = 6.00833204789287/(1.01^200)
+Present value utility = *0.8212572*
+
+New percentage loss from climate change: 
+0.8212572 - 0.5061516 = 0.3151056
+0.3151056/0.8212572 = 0.3836869 = 38.37%
+*L = 38.37* 
+*So a 10% increase in g resulted in no significant change in L (0.00001% increase)*
+
+
+*Sensitivity to n* 
+*With* climate change: new n = 0.55
+Utility in year 200 = 3.53568725973115
+Present value utility = 3.53568725973115/(1.01^200)
+Present value utility = *0.4832803*
+
+*Without* climate change: new n = 0.55 
+Utility in year 200 = 5.46578469145989
+Present value utility = 5.46578469145989/(1.01^200)
+Present value utility = *0.7470983*
+
+0.7470983 - 0.4832803 = 0.263818
+0.263818/0.7470983 = 0.3531235 = 35.31%
+*L = 35.31%* 
+*So a 10% increase in n results in a 3.06% decrease in L (38.37% to 35.31%)*
+
+
+*Sensitivity to B*
+*With* climate change: new B = 0.055
+Utility in year 200 = 3.19231762290548
+Present value utility = 3.19231762290548/(1.01^200)
+Present value utility = *0.4363463*
+
+*Without* cliamte change: new B = 0.055
+Utility in year 200 = 5.43656365691809
+Present value utility = 5.43656365691809/(1.01^200)
+Present value utility = *0.7431042*
+
+0.7431042 - 0.4363463 = 0.3067579
+0.3067579/0.7431042 =  0.412806 = 41.28%
+*L = 41.28%*
+*So a 10% increase in B results in a 2.91% increase in L (38.37% to 41.28%)*
+
+
