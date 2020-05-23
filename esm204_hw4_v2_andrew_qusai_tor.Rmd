@@ -1,0 +1,428 @@
+---
+title: "ESM204 HW4 Version 2"
+author: "Andrew Salvador"
+date: "5/23/2020"
+output: html_document
+---
+
+THE BEST VERSION!!
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Attach necessary packages
+```{r}
+library(janitor)
+library(tidyverse)
+library(broom)
+```
+
+Build the functions, set variables t & T, everything else is given
+temp = temperature at year t
+K_t = fraction of economic activity retained at year t, if temperature is T(t)
+C_t = economic activity ("consumption") at time t
+U_c = society's utility from consumption
+discount rate r = delta + ng
+```{r}
+t = 100
+T = 0
+B = 0.05
+g = 0.01
+n = 0.5
+delta = 0.005
+r = delta + n*g
+temp = tauf
+
+#FUNCTION 1 (temperature at year 't', temperature 'T' at year 100)
+tauf = function(t,T)
+{
+  out = min(t*T/100, T)
+  return(out)
+}
+
+
+#FUNCTION 2 (fraction of economic activity)
+Keep = function(temp)
+{
+  out = exp(-B*temp^2)
+  return(out)
+}
+
+
+#FUNCTION 3 (economic activity "consumption", grows at rate g, reduced by K)
+Consumption = function(t,temp)
+{
+  out = Keep(temp)*exp(g*t)
+  return(out)
+}
+
+
+#FUNCTION 4 (society's utility from consumption)
+Utility = function(C)
+{
+  out = ((C)^(1-n))/(1-n)
+  return(out)
+}
+
+```
+
+--------------------------------------------------------------------------------------------------------------
+
+QUESTION 1: PLOTS
+(a) Plot temperature over time for no climate change (T = 0), modest climate change (T = 2), and with extreme climate change (T = 8).
+
+
+```{r}
+# This generates a dataframe with temperature values from 0 to 200. Good for question 1(a)
+# No climate change (T = 0)
+tauf = function(t,T)
+{
+  out = min(t*T/100, T)
+  return(out)
+}
+
+T = 0
+DF = data.frame(year = seq(1,200), temperature = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = tauf(t,T)
+  DF$temperature[t] = v
+}
+
+plot(DF)
+
+```
+
+
+```{r}
+# Modest climate change (T = 2)
+T = 2
+DF = data.frame(year = seq(1,200), temperature = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = tauf(t,T)
+  DF$temperature[t] = v
+}
+
+plot(DF)
+
+```
+
+```{r}
+# Extreme climate change (T = 8)
+T = 8
+DF = data.frame(year = seq(1,200), temperature = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = tauf(t,T)
+  DF$temperature[t] = v
+}
+
+plot(DF)
+
+```
+
+(b) Plot consumption over time for no climate change, modest climate change, and extreme climate change.
+
+```{r}
+# Consumption no climate change
+T = 0
+temp = tauf(t,T)
+
+Consumption = function(t,temp)
+{
+  out = Keep(temp)*exp(g*t)
+  return(out)
+}
+
+
+DF = data.frame(year = seq(1,200), consumption = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = Consumption(t,temp)
+  DF$consumption[t] = v
+}
+
+plot(DF)
+
+```
+
+```{r}
+# Consumption modest climate change (T = 2)
+T = 2
+temp = tauf(t,T)
+
+Consumption = function(t,temp)
+{
+  out = Keep(temp)*exp(g*t)
+  return(out)
+}
+
+
+DF = data.frame(year = seq(1,200), consumption = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = Consumption(t,temp)
+  DF$consumption[t] = v
+}
+
+plot(DF)
+```
+
+```{r}
+# Consumption extreme climate change (T = 8)
+T = 8
+temp = tauf(t,T)
+
+Consumption = function(t,temp)
+{
+  out = Keep(temp)*exp(g*t)
+  return(out)
+}
+
+
+DF = data.frame(year = seq(1,200), consumption = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = Consumption(t,temp)
+  DF$consumption[t] = v
+}
+
+plot(DF)
+```
+
+(c) Plot undiscoutned utility over time for no climate change, modest climate change, and extreme climate change.
+
+```{r}
+# Undiscoutned utility with no climate change (T = 0) #THIS IS NOT RIGHT SOMETHING IS WRONG
+T = 5
+temp = tauf(t,T)
+C = Consumption(t,temp)
+
+DF = data.frame(year = seq(1,200), utility = numeric(200))
+
+for (t in seq(1,200))
+{
+  v = Utility(C)
+  DF$utility[t] = v
+}
+
+plot(DF)
+```
+
+--------------------------------------------------------------------------------------------------------------
+
+QUESTION 2: ANALYSIS
+(a) Suppose T = 4.4. What is the present value (i.e. discounted) utility over the next 200 years with climate change? What is the present value utility without climate change? What is the percentage loss in present value utility from climate change?
+
+```{r}
+#This dataframe shows values for temperature, economic activity retained (K), consumption (C), utility (U), and present value utility (PVU) from years 0 to 200. It also gives the NPV which is the sum of all the PVUs over those years. Use this to compare PVU with and without climate change in question 2(a,b). 
+
+# Make sure to run the initial functions before running this part.
+
+# With climate change
+T = 4.4
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 198.661219717316
+```
+
+```{r}
+# Without climate change
+T = 0
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 255.273441757037
+```
+
+To calculate L:
+255.273441757037 - 198.661219717316 = 56.61222
+56.61222/255.273441757037 = 0.2217709 = 22.18%
+*L = 22.18*
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(b) 
+Now, show how sensitive your calculation of L is to the following parameters: T, g, n, and B. To do so, calculate the % change in L that arises from a 10% increase in each of these parameters.
+
+*Sensitivity to T*
+```{r}
+# With climate change (10% increase of 4.4, new T = 4.84)
+T = 4.84
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 189.421099192601
+```
+
+```{r}
+# Without climate change (10% increase of 0, new T = 0)
+T = 0
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 255.273441757037
+```
+To calculate L
+255.273441757037 - 189.421099192601 = 65.85234
+65.85234/255.273441757037 = 0.2579678 = 25.80
+*New L = 25.80%*
+**A 10% increase in T caused L to increased from 22.18% to 25.80%**
+
+
+*Sensitivity to g*
+```{r}
+# With climate change (10% increase to 0.01, new g = 0.11)
+T = 4.4
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 198.734924256075
+```
+
+```{r}
+# Without climate change (10% increase to 0.01, new g = 0.11)
+T = 0
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 255.381740591182
+```
+To calculate L
+255.381740591182 - 198.734924256075 = 56.64682
+56.64682/255.381740591182 = 0.2218123 = 22.18%
+*New L = 22.18%*
+**A 10% increase in g caused L to increase minimally from  22.17709% to 22.18123%**
+
+
+*Sensitivity to n*
+```{r}
+# With climate change (10% increase to 0.5, new n = 0.55)
+T = 4.4
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 210.18538834112
+```
+
+```{r}
+# Without climate change (10% increase to 0.5, new n = 0.55)
+T = 0
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 261.410935878083
+```
+To calculate L
+261.410935878083 - 210.18538834112 = 51.22555
+51.22555/261.410935878083 = 0.1959579 = 19.60%
+*New L = 19.60%*
+**A 10% increase in n caused L to decrease from 22.18% to 19.60%**
+
+
+*Sensitivity to B*
+```{r}
+# With climate change (10% increase to 0.05, new B = 0.055)
+T = 4.4
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 194.164520791888
+```
+
+```{r}
+# Without climate change (10% increase to 0.05, new n = 0.055)
+T = 0
+DF = data.frame(t=seq(0,200)) %>% 
+  rowwise() %>% 
+  mutate(temperature = tauf(t,T)) %>% 
+  mutate(K = Keep(temperature)) %>% 
+  mutate(C = Consumption(t,temperature)) %>% 
+  mutate(U = Utility(C)) %>% 
+  mutate(PVU = U/(1+r)^t) 
+
+  NPV = sum(DF$PVU)
+  
+# Net present value utility = 255.273441757037
+```
+To calculate L
+255.273441757037 - 194.164520791888 = 61.10892
+61.10892/255.273441757037 = 0.2393861 = 23.94%
+*New L = 23.94%*
+**A 10% increase in B caused L to increase from 22.18% to 23.94%**
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(c) Back to the original parameters, suppose we could completely prevent climate change from ocurring (so T = 0 instead of T = 4.4) but doing so would require giving up a fraction omega of consumption every year for the next 200 years. What is the maximum value of omega society would be willing to endure every year to completely prevent climate change? Call this omegastar. 
+
+
