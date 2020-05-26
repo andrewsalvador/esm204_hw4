@@ -1,18 +1,21 @@
 ---
-title: "esm204_hw4_v6_andrew_qusai_tor"
-author: "Andrew Salvador"
+title: "ESM204 HW4 Andrew, Qusai, Tor"
+author: "Andrew Salvador, Qusai Bhaijeewala, & Tor Fibiger"
 date: "5/25/2020"
 output: html_document
 ---
 
-Version 6
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warnings = FALSE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
-Attach necessary packages
+
 ```{r}
+# Attach necessary packages
 library(janitor)
 library(tidyverse)
 library(broom)
@@ -67,9 +70,9 @@ Utility = function(C)
 
 ```
 
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------
 
-QUESTION 1: PLOTS
+### QUESTION 1: PLOTS
 (a) Plot temperature over time for no climate change (T = 0), modest climate change (T = 2), and with extreme climate change (T = 8).
 
 
@@ -92,7 +95,11 @@ DF_T_wocc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t, temperature)
 
-plot(DF_T_wocc)
+plot(DF_T_wocc,
+     main = "Temperature without climate change (T = 0)",
+     xlab = "Year",
+     ylab = "Temperature")
+
 
 ```
 
@@ -115,7 +122,10 @@ DF_T_mcc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t, temperature)
 
-plot(DF_T_mcc)
+plot(DF_T_mcc,
+     main = "Temperature with moderate climate change (T = 2)",
+     xlab = "Year",
+     ylab = "Temperature")
 ```
 
 ```{r}
@@ -136,7 +146,10 @@ DF_T_ecc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t, temperature)
 
-plot(DF_T_ecc)
+plot(DF_T_ecc,
+     main = "Temperature with extreme climate change (T = 8)",
+     xlab = "Year",
+     ylab = "Temperature")
 ```
 
 (b) Plot consumption over time for no climate change, modest climate change, and extreme climate change.
@@ -160,7 +173,10 @@ DF_C_wocc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,C)
 
-plot(DF_C_wocc)
+plot(DF_C_wocc,
+     main = "Consumption without climate change (T = 0)",
+     xlab = "Year",
+     ylab = "Consumption")
 ```
 
 ```{r}
@@ -181,7 +197,10 @@ DF_C_mcc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,C)
 
-plot(DF_C_mcc)
+plot(DF_C_mcc,
+     main = "Consumption with moderate climate change (T = 2)",
+     xlab = "Year",
+     ylab = "Consumption")
 ```
 
 ```{r}
@@ -202,7 +221,10 @@ DF_C_ecc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,C)
 
-plot(DF_C_ecc)
+plot(DF_C_ecc,
+     main = "Consumption with extreme climate change (T = 8)",
+     xlab = "Year",
+     ylab = "Consumption")
 ```
 
 (c) Plot undiscoutned utility over time for no climate change, modest climate change, and extreme climate change.
@@ -225,7 +247,10 @@ DF_U_wocc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,U)
 
-plot(DF_U_wocc)
+plot(DF_U_wocc,
+     main = "Undiscounted utility without climate change (T = 0)",
+     xlab = "Year",
+     ylab = "Undiscounted utility")
 ```
 
 ```{r}
@@ -246,7 +271,10 @@ DF_U_mcc= data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,U)
 
-plot(DF_U_mcc)
+plot(DF_U_mcc,
+     main = "Undiscounted utility with moderate climate change (T = 2)",
+     xlab = "Year",
+     ylab = "Undiscounted utility")
 ```
 
 ```{r}
@@ -267,13 +295,17 @@ DF_U_ecc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,U)
 
-plot(DF_U_ecc)
+plot(DF_U_ecc,
+     main = "Undiscounted utility with extreme climate change (T = 8)",
+     xlab = "Year",
+     ylab = "Undiscounted utility")
 ```
 
 ----------------------------------------------------------------------------------------
 
-QUESTION 2: ANALYSIS
-(a) Suppose T = 4.4. What is the present value (i.e. discounted) utility over the next 200 years with climate change? What is the present value utility without climate change? What is the percentage loss in present value utility from climate change?
+### QUESTION 2: ANALYSIS
+
+#### (a) Suppose T = 4.4. What is the present value (i.e. discounted) utility over the next 200 years with climate change? What is the present value utility without climate change? What is the percentage loss in present value utility from climate change?
 
 ```{r}
 #This dataframe shows values for temperature, economic activity retained (K), consumption (C), utility (U), and present value utility (PVU) from years 0 to 200. It also gives the NPV which is the sum of all the PVUs over those years. Use this to compare PVU with and without climate change in question 2(a,b). 
@@ -298,6 +330,8 @@ wcc_DF = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 198.661219717316
 ```
+Net present value utility with climate change = 198.661219717316
+
 
 ```{r}
 # Without climate change (wocc)
@@ -320,6 +354,7 @@ wocc_DF = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 255.273441757037
 ```
+Net present value utility without climate change = 255.273441757037
 
 ```{r}
 # To calculate L:
@@ -329,13 +364,14 @@ wocc_DF = data.frame(t=seq(0,200)) %>%
 
 L = (wocc_NPV - wcc_NPV)/wocc_NPV*100
 ```
+L = 22.18
 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-(b) 
-Now, show how sensitive your calculation of L is to the following parameters: T, g, n, and B. To do so, calculate the % change in L that arises from a 10% increase in each of these parameters.
+#### (b) Now, show how sensitive your calculation of L is to the following parameters: T, g, n, and B. To do so, calculate the % change in L that arises from a 10% increase in each of these parameters.
 
-*Sensitivity to T* 
+**Sensitivity to T** 
+
+*With climate change sensitivity to T (10% increase of 4.4, new T = 4.84)* 
 ```{r}
 # With climate change sensitivity to T (10% increase of 4.4, new T = 4.84) (wcc_NPV_sT)
 t = 200
@@ -357,7 +393,9 @@ wcc_DF_sT = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 189.421099192601
 ```
+New net present value utility with climate change = 189.421099192601
 
+Without climate change sensitivity to T (10% increase of 0, new T = 0) 
 ```{r}
 # Without climate change sensitivity to T (10% increase of 0, new T = 0) (wocc_NPV_sT)
 t = 200
@@ -379,8 +417,9 @@ wocc_DF_sT = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 255.273441757037
 ```
+New net present value utility without climate change = 255.273441757037
 
-Calculating new L with 10% increase in T
+
 ```{r}
 # To calculate L
 # 255.273441757037 - 189.421099192601 = 65.85234
@@ -390,10 +429,15 @@ Calculating new L with 10% increase in T
 
 L_T = (wocc_NPV_sT - wcc_NPV_sT)/wocc_NPV_sT*100
 ```
+*New L = 25.80*
 
+~~~~~~~
+A 10% increase in T caused L to increased from 22.18% to 25.80%, a 16.32% increase.
+~~~~~~~
 
+**Sensitivity to g**
 
-*Sensitivity to g*
+*With climate change sensitivity to g (10% increase to 0.01, new g = 0.011)* 
 ```{r}
 # With climate change sensitivity to g (10% increase to 0.01, new g = 0.011) (wcc_NPV_sg)
 t = 200
@@ -415,6 +459,7 @@ wcc_DF_sg = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 206.137459318153
 ```
+New net present value utility with climate change = 206.137459318153
 
 ```{r}
 # Without climate change sensitivity to g (10% increase to 0.01, new g = 0.011) (wocc_NPV_sg)
@@ -437,8 +482,9 @@ wocc_DF_sg = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 266.277404501181
 ```
+New net present value utility without climate change = 266.277404501181
 
-Calculating new L w/10% increase in g
+
 ```{r}
 # To calculate L
 # 266.277404501181 - 206.137459318153 = 60.13995
@@ -448,11 +494,17 @@ Calculating new L w/10% increase in g
 
 L_g = (wocc_NPV_sg - wcc_NPV_sg)/wocc_NPV_sg*100
 ```
+*New L = 22.59%*
+
+~~~~~~~
+A 10% increase in g caused L to increase minimally from 22.18% to 22.59%, a 1.85% increase.
+~~~~~~~
 
 
 
+**Sensitivity to n**
 
-*Sensitivity to n*
+*With climate change sensitivity to n (10% increase to 0.5, new n = 0.55)*
 ```{r}
 # With climate change sensitivity to n (10% increase to 0.5, new n = 0.55) (wcc_NPV_sn)
 t = 200
@@ -474,7 +526,9 @@ wcc_DF_sn = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 217.796047447958
 ```
+New net present value utility with climate change = 217.796047447958
 
+Without climate change sensitivity to n (10% increase to 0.5, new n = 0.55)
 ```{r}
 # Without climate change sensitivity to n (10% increase to 0.5, new n = 0.55) (wocc_NPV_sn)
 t = 200
@@ -496,8 +550,9 @@ wocc_DF_sn = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 272.133835059214
 ```
+New net present value utility without climate change = 272.133835059214
 
-To calculate new L with 10% increase in n
+
 ```{r}
 # To calculate L
 # 272.133835059214 - 217.796047447958 = 54.33779
@@ -507,10 +562,16 @@ To calculate new L with 10% increase in n
 
 L_n = (wocc_NPV_sn - wcc_NPV_sn)/wocc_NPV_sn*100
 ```
+*New L = 19.97%*
+
+~~~~~~~
+A 10% increase in n caused L to decrease from 22.18% to 19.97
+~~~~~~~
 
 
+**Sensitivity to B**
 
-*Sensitivity to B*
+*With climate change sensitivity to B (10% increase to 0.05, new B = 0.055)*
 ```{r}
 # With climate change sensitivity to B (10% increase to 0.05, new B = 0.055) (wcc_NPV_sB)
 t = 200
@@ -532,7 +593,9 @@ wcc_DF_sB = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 194.164520791888
 ```
+New net present value utility with climate change = 194.164520791888
 
+Without climate change sensitivity to B (10% increase to 0.05, new B = 0.055)
 ```{r}
 # Without climate change sensitivity to B (10% increase to 0.05, new B = 0.055) (wocc_NPV_sB)
 t = 200
@@ -554,8 +617,9 @@ wocc_DF_sB = data.frame(t=seq(0,200)) %>%
   
 # Net present value utility = 255.273441757037
 ```
+New net present value utility without = 255.273441757037
 
-To calculate new L with 10% increase in B
+
 ```{r}
 # To calculate L
 # 255.273441757037 - 194.164520791888 = 61.10892
@@ -565,12 +629,17 @@ To calculate new L with 10% increase in B
 
 L_B = (wocc_NPV_sB - wcc_NPV_sB)/wocc_NPV_sB*100
 ```
+*New L = 23.94%*
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+A 10% increase in B caused L to increase from 22.18% to 23.94%
+~~~~~~~
 
-(c) Back to the original parameters, suppose we could completely prevent climate change from ocurring (so T = 0 instead of T = 4.4) but doing so would require giving up a fraction omega of consumption every year for the next 200 years. What is the maximum value of omega society would be willing to endure every year to completely prevent climate change? Call this omegastar. 
+
+#### (c) Back to the original parameters, suppose we could completely prevent climate change from ocurring (so T = 0 instead of T = 4.4) but doing so would require giving up a fraction omega of consumption every year for the next 200 years. What is the maximum value of omega society would be willing to endure every year to completely prevent climate change? Call this omegastar. 
 
 With climate change (T = 4.4), NPV utility = 198.66
+
 Without climate change (T = 0), NPV utility = 255.27
 
 ```{r}
@@ -639,11 +708,13 @@ DF_C_wcc = data.frame(t=seq(0,200)) %>%
   mutate(PVU = U/(1+r)^t) %>% 
   select(t,consumption)
 
-plot(DF_C_wcc)
 ```
+ ~~~~~~~
+ Omega* = 0.38
+ ~~~~~~~
+ 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-(d) Suppose we are uncertain about T, but it has the following probability distribution: T = 2 (probability 0.2), T = 4 (probability 0.5), T = 6 (probability 0.3). Calculate omegastar under uncertainty over T. 
+#### (d) Suppose we are uncertain about T, but it has the following probability distribution: T = 2 (probability 0.2), T = 4 (probability 0.5), T = 6 (probability 0.3). Calculate omegastar under uncertainty over T. 
 
 ```{r}
 # Call omegastar 0.39 when T = 4.4
@@ -738,6 +809,7 @@ Q2dwocc_U_omega = sum(Q2cwocc_DF_omega$U)
 Q2dwocc_NPV_omega = sum(Q2cwocc_DF_omega$PVU)
 
 ```
-
-
+~~~~~~~
+Omega* = 0.37 under uncertainty over T.
+~~~~~~~
 
