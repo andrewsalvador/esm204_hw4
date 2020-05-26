@@ -663,8 +663,6 @@ Q2cwocc_DF_omega = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-Q2cwocc_C_omega = sum(Q2cwocc_DF_omega$C)
-Q2cwocc_U_omega = sum(Q2cwocc_DF_omega$U)
 Q2cwocc_NPV_omega = sum(Q2cwocc_DF_omega$PVU)
  
 
@@ -687,8 +685,6 @@ Q2cwcc_DF = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-Q2cwcc_C = sum(Q2cwcc_DF$C)
-Q2cwcc_U = sum(Q2cwcc_DF$U)
 Q2cwcc_NPV = sum(Q2cwcc_DF$PVU)
 
 # Just to look at a plot of consumption with climate change T = 4.4
@@ -734,8 +730,6 @@ T2_DF = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-C_T2 = sum(T2_DF$C)
-U_T2 = sum(T2_DF$U)
 NPV_T2 = sum(T2_DF$PVU)
 
 # T = 4 (50% probability)
@@ -754,8 +748,6 @@ T4_DF = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-C_T4 = sum(T4_DF$C)
-U_T4 = sum(T4_DF$U)
 NPV_T4 = sum(T4_DF$PVU)
 
 # T = 6 (30% probability)
@@ -774,14 +766,12 @@ T6_DF = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-C_T6 = sum(T6_DF$C)
-U_T6 = sum(T6_DF$U)
 NPV_T6 = sum(T6_DF$PVU)
 ```
 
 
 ```{r}
-# If we look at NPV, then:
+# If we look at expected value NPV, then:
 expected_value = NPV_T2*0.2 + NPV_T4*0.5 + NPV_T6*0.3
 
 #expected value = 201.3446
@@ -804,8 +794,6 @@ Q2cwocc_DF_omega = data.frame(t=seq(0,200)) %>%
   mutate(U = Utility(C)) %>% 
   mutate(PVU = U/(1+r)^t) 
 
-Q2dwocc_C_omega = sum(Q2cwocc_DF_omega$C)
-Q2dwocc_U_omega = sum(Q2cwocc_DF_omega$U)
 Q2dwocc_NPV_omega = sum(Q2cwocc_DF_omega$PVU)
 
 ```
