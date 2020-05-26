@@ -650,7 +650,7 @@ To find the maximum value of theta, plug in values of theta so that the new NPV 
 ```{r}
 # Consumption without climate change (T = 0), giving up fraction theta each year
 # At theta 0.53, total consumption over 200 years is higher, but NPV utility and undiscounted utility is lower
-# at theta 0.39, NPV, U, and C are all higher than with climate change. 
+# At theta 0.39, NPV, U, and C are all higher than with climate change. 
 
 t = 200
 T = 0
@@ -784,9 +784,9 @@ Now plug in values of theta so that the NPV utility without climate change is gr
 # If we look at expected value NPV, then:
 expected_value = NPV_T2*0.2 + NPV_T4*0.5 + NPV_T6*0.3
 
-#expected value = 201.3446
+# Expected value = 201.3446
 
-# theta* must result in NPV w/no climate change > than expected value
+# Theta* must result in NPV w/no climate change > than expected value
 t = 200
 T = 0
 B = 0.05
@@ -794,7 +794,7 @@ g = 0.01
 n = 0.50
 delta = 0.005
 theta = 0.37
-# at theta = 0.37, NPV without climate change > expected value 
+# At theta = 0.37, NPV without climate change > expected value 
 
 Q2cwocc_DF_theta = data.frame(t=seq(0,200)) %>% 
   rowwise() %>% 
