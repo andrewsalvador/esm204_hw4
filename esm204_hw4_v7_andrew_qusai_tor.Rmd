@@ -429,7 +429,7 @@ New net present value utility without climate change = 255.273441757037
 
 L_T = (wocc_NPV_sT - wcc_NPV_sT)/wocc_NPV_sT*100
 ```
-*New L = 25.80*
+*New L = 25.80%*
 
 ~~~~~~~
 A 10% increase in T caused L to increased from 22.18% to 25.80%, a 16.32% increase.
